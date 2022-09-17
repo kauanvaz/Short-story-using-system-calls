@@ -9,14 +9,7 @@
 #include <string.h>
 #include <signal.h>
 #define MSGSIZE 305
-
-/*
-struct sigaction {
-    void      (*sa_handler)(int);
-    sigset_t  sa_mask;
-    int       sa_flags;
-    void      (*sa_sigaction)(int, siginfo_t *,void *);
-};*/
+#define TEMPO_MIN 2
 
 /*
 fork		OK
@@ -25,49 +18,15 @@ clone		OK
 pipe		OK
 waitpid		OK
 exit		OK
-sigaction	
-kill		
-*/
-
-/*
-
-Ymir era uma escrava do rei Fritz, de Eldia, um antigo reino que sofria com as guerras
-constantes. Como qualquer escrava, Ymir era bastante maltratada e, certo dia, após uma
-fuga mortal pela floresta, foi agraciada com os poderes de um titã. Mas Ymir possuia
-um complexo que não a permitia abandonar o rei e mesmo com os grandes poderes 
-que possuia continuou a servi-lo fielmente.
-
-********* fork, clone, waitpid **********
-O rei teve três filhas com ela: Maria, Rose e Sina
-
-********* pipe **********
-Carta para Sina
-
-Ymir, já bastante desgastada após ser usada como instrumento de guerra, estava próxima
-de sua morte e para que os poderes pudessem ser passados adiantes, o rei Fritz
-ordenou que as filhas se alimentassem da própria mãe em um ritual canibalesco.
-
-Ligação com o Eren (futuro). Ymir realmente só descansa após Eren realizar o seu desejo.
-
-********* exec **********
-Após várias gerações, um garoto chamado Eren nasceu.
-
-********* pipe **********
-Em uma das guerras travadas entre humanos e titãs, sua mãe foi fatalmente ferida e, antes
-de morrer, falou para que Eren sobrevivesse e não fizesse nada imprudente.
-
-********* kill **********
-No entanto, Eren não se conformou e seu desejo de vida passou a ser exterminar todos
-os titãs que existem.
-
-********* sigaction, kill, exit **********
-Ymir tem seu desejo de se libertar daquela maldição realizado por Eren e, finalmente, foi
-capaz de descansar.
+sigaction	OK
+kill		OK
 */
 
 static int rose(void* arg) {
     char* buffer = (char*)arg;
     printf("%s\n", buffer);
+	sleep(2*TEMPO_MIN);
+
     strcpy(buffer, "Rose: ...\n"); // Filho escreve no buffer
     return 0;
 }
@@ -101,6 +60,8 @@ static int nascimento_rose(void) {
     }
 
     printf("%s\n", buffer);
+	sleep(TEMPO_MIN);
+
 	free(stack);
 	return 0;
 }
@@ -110,76 +71,91 @@ int main() {
 	pid_t pid[2];
 	int status;
 	char inbuf[MSGSIZE];
-    int p[2], i;
+	int p[2];
 
+	printf("\n                  CONFLITO DA LINHAGEM ELDIANA                   \n\n");
+	sleep(TEMPO_MIN);
 	printf("Sou Ymir, uma escrava do rei Fritz, de Eldia, um antigo reino que\n"
 			"sofria com guerras constantes.\n\n");
+	sleep(2*TEMPO_MIN+1);
+
 	printf("Como qualquer escrava, fui bastante maltratada e, certo dia,\n"
 			"após uma fuga mortal pela floresta, fui agraciada com os poderes\n"
 			"de um titã.\n\n");
+	sleep(3*TEMPO_MIN);
+
 	printf("Mas eu possuia um complexo que não me permitia abandonar o rei e\n"
 			"mesmo com os grandes poderes que obtive continuei a servi-lo\n"
 			"fielmente como um instrumento de guerra.\n\n");
+	sleep(3*TEMPO_MIN);
 
 	printf("Eu e o rei Fritz tivemos duas filhas:\n\n");
-
-	pid_t maria, sina;
-
-	maria = fork();
-	pid[0] = maria;
+	sleep(TEMPO_MIN+1);
 
 	if (pipe(p) < 0)
         exit(1);
 
 	char* msg1 = "\"Sina,\n\n"
-				 "Não quero falhar com você assim como falhei com Maria.\n"
 				 "Há verdades as quais você desconhece. Venha me encontrar\n"
-				 "no porão do castelo no dia da lua cheia assim que o toque\n"
-				 "de recolher tocar. Só assim você poderá, talvez, ter um\n"
+				 "no porão do castelo meia noite. Assim você poderá ter um\n"
 				 "futuro diferente do meu.\n\n"
 				 "Com carinho,\n"
 				 "Sua mãe, Ymir.\"\n\n";
 
 	write(p[1], msg1, MSGSIZE);
 
+	pid_t maria, sina;
+	maria = fork();
+	pid[0] = maria;
+
 	if (maria == 0) {
 		printf("Maria, a preferida do rei.\n\n");
+		sleep(TEMPO_MIN+1);
 	} else {
+		sleep(TEMPO_MIN);
 		sina = fork();
 		pid[1] = sina;
 		if (sina == 0) {
-			printf("E Sina, a caçula até então. Tentei, assim como tentei com Maria,\n" 
-					"fazer com que ela não seguisse os princípos do próprio pai, mas\n"
-					"foi inútil, o rei Fritz sempre teve mais influência.\n\n");
+			printf("E Sina, a caçula até então. Tentei, assim como tentei com\n" 
+					"Maria, fazer com que ela não seguisse os princípos do\n"
+					"próprio pai, mas foi inútil, o rei Fritz sempre teve\n"
+					"mais influência.\n\n");
+			sleep(4*TEMPO_MIN);
 
 			printf("Cheguei mesmo a colocar uma carta em seu quarto, já que eu não\n"
 					"podia interagir muito com elas. A carta dizia: \n\n");
+			sleep(2*TEMPO_MIN);
 
 			read(p[0], inbuf, MSGSIZE);
-			printf("%s\n", inbuf);
+			printf("%s", inbuf);
+			sleep(5*TEMPO_MIN);
 
-			printf("Inútil. A carta foi encontrada e Sina nunca a leu.\n\n");
-
-		} else if (sina) {
+			printf("Inútil. Sina nunca apareceu.\n\n");
+			sleep(TEMPO_MIN);
+		} else {
 			waitpid(pid[0], &status, 0);
 			waitpid(pid[1], &status, 0);
 
 			printf("Eu, já bastante desgastada, estava próxima da morte, mas\n" 
 					"ainda tive outra filha, Rose.\n\n");
+			sleep(2*TEMPO_MIN);
 
 			printf("No momento de seu nascimento, ciente de meu destido, cochichei,\n"
 					"como se ela pudesse me endender:\n\n");
-			
+			sleep(2*TEMPO_MIN);
+
 			nascimento_rose();
 
 			printf("Comigo cada vez mais fraca, o rei Fritz ordenou que nossas\n"
 					"filhas me consumissem em um ritual canibalesco para que os\n" 
-					"poderes pudessem ser passados adiantes.\n\n");
+					"poderes pudessem ser passados adiante.\n\n");
+			sleep(3*TEMPO_MIN);
 
 			printf("Mas ninguém percebeu que também dei origem a um outro filho que não se\n"
 					"materializou como uma nova criança, mas sim como o rancor que guardei\n"
 					"por tudo que sofri e que, assim como meus poderes, transitou entre\n"
 					"diversas gerações.\n\n");
+			sleep(4*TEMPO_MIN+1);
 
 			static char *args[] = { "./geracaoEren", "1", "10", NULL };
             execv(args[0], args);
