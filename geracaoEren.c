@@ -24,14 +24,14 @@ void handler(int num) {
 
 void handler2(int num) {
 	write(STDOUT_FILENO, "\nEren decidiu viver uma vida pacata, sabia de seu prósito,\n"
-						 "mas também tinha conhecimento de suas fraquezas. Morreu com\n"
-						 "remorsos e, no fim, também foi morto por titãs.\n\n", 173);
+						 "mas também tinha conhecimento de suas fraquezas. Viveu muito,\n"
+						 "mas com remorsos.\n\n", 143);
 
 
 	sleep(3*TEMPO_MIN+1);
 	write(STDOUT_FILENO, "FIM\n", 5);
 
-	kill(getpid(), SIGKILL);
+	exit(0);
 }
 
 int main(int argc, char **argv) {
